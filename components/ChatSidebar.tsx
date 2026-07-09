@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { MessageSquare, MessageSquareDashed, Plus, Trash2, X } from 'lucide-react';
+import { Check, MessageSquare, MessageSquareDashed, Plus, Trash2, X } from 'lucide-react';
 
 interface ConversationSummary {
   id: string;
@@ -32,13 +32,7 @@ export default function ChatSidebar({ conversations, onNavigate, onClose }: Chat
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (pendingDeleteId !== id) {
-      // First click arms the confirmation; second click actually deletes.
-      setPendingDeleteId(id);
-      return;
-    }
-
+  const confirmDelete = async (id: string) => {
     setPendingDeleteId(null);
     setDeletingId(id);
     setItems((prev) => prev.filter((conv) => conv.id !== id));
@@ -101,7 +95,9 @@ export default function ChatSidebar({ conversations, onNavigate, onClose }: Chat
                 href={`/chat/${conv.id}`}
                 onClick={onNavigate}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex items-center gap-2 pl-3 pr-9 py-2.5 rounded-lg text-sm truncate transition-colors ${
+                className={`flex items-center gap-2 pl-3 py-2.5 rounded-lg text-sm truncate transition-colors ${
+                  isPendingDelete ? 'pr-16' : 'pr-9'
+                } ${
                   isActive
                     ? 'bg-rose-500 text-white'
                     : 'text-gray-700 hover:bg-rose-100'
@@ -111,27 +107,55 @@ export default function ChatSidebar({ conversations, onNavigate, onClose }: Chat
                 <span className="truncate">{conv.title}</span>
               </Link>
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleDelete(conv.id);
-                }}
-                onBlur={() => setPendingDeleteId((id) => (id === conv.id ? null : id))}
-                disabled={isDeleting}
-                aria-label={isPendingDelete ? `Confirm delete "${conv.title}"` : `Delete "${conv.title}"`}
-                title={isPendingDelete ? 'Click again to confirm' : 'Delete conversation'}
-                className={`absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md transition-all ${
-                  isPendingDelete
-                    ? 'bg-red-500 text-white opacity-100'
-                    : isActive
-                      ? 'text-white/70 hover:bg-white/20 hover:text-white opacity-0 group-hover:opacity-100 focus-visible:opacity-100'
-                      : 'text-gray-400 hover:bg-red-100 hover:text-red-600 opacity-0 group-hover:opacity-100 focus-visible:opacity-100'
-                }`}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+              {isPendingDelete ? (
+                <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      confirmDelete(conv.id);
+                    }}
+                    aria-label={`Confirm delete "${conv.title}"`}
+                    title="Confirm delete"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors"
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setPendingDeleteId(null);
+                    }}
+                    aria-label="Cancel delete"
+                    title="Cancel"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPendingDeleteId(conv.id);
+                  }}
+                  disabled={isDeleting}
+                  aria-label={`Delete "${conv.title}"`}
+                  title="Delete conversation"
+                  className={`absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100 ${
+                    isActive
+                      ? 'text-white/70 hover:bg-white/20 hover:text-white'
+                      : 'text-gray-400 hover:bg-red-100 hover:text-red-600'
+                  }`}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           );
         })}
