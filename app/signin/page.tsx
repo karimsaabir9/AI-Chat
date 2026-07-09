@@ -186,8 +186,28 @@ const LoginPage = () => {
   );
 };
 
+const SignInSkeleton = () => (
+  <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-rose-50 to-white px-4 py-12">
+    <div className="w-full max-w-sm animate-pulse">
+      <div className="mb-8 flex flex-col items-center text-center">
+        <div className="mb-4 h-12 w-12 rounded-xl bg-rose-200" />
+        <div className="h-7 w-40 rounded bg-gray-200" />
+        <div className="mt-2 h-4 w-56 rounded bg-gray-100" />
+      </div>
+      <div className="rounded-2xl border border-rose-100 bg-white p-6 shadow-lg shadow-rose-100/50 sm:p-8">
+        <div className="flex flex-col gap-4">
+          <div className="h-11 rounded-xl bg-gray-100" />
+          <div className="h-11 rounded-xl bg-gray-100" />
+          <div className="h-11 rounded-xl bg-rose-100" />
+          <div className="h-11 rounded-xl bg-gray-100" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const SignInPage = () => (
-  <Suspense fallback={null}>
+  <Suspense fallback={<SignInSkeleton />}>
     <LoginPage />
   </Suspense>
 );

@@ -1,6 +1,7 @@
 import { openai } from "@ai-sdk/openai";
 import { generateImage } from "ai";
 import { nanoid } from "nanoid";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { getUserConversationById } from "@/lib/chat";
 import { generateConversationTitle, DEFAULT_CONVERSATION_TITLE } from "@/lib/chat/title";
@@ -64,6 +65,8 @@ export async function POST(req: Request) {
       ...(generatedTitle ? { title: generatedTitle } : {}),
     })
     .where(eq(conversation.id, conversationId));
+
+  revalidatePath('/chat', 'layout');
 
   return Response.json({ userMessageId, assistantMessageId, image: dataUrl });
 }

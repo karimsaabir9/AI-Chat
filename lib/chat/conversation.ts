@@ -59,3 +59,14 @@ export async function getUserConversationById(
 
   return conv;
 }
+
+// Delete a conversation (and its messages, via cascade) if it belongs to the user
+export async function deleteConversation(conversationId: string, userId: string) {
+  const conv = await getUserConversationById(conversationId, userId);
+  if (!conv) {
+    return false;
+  }
+
+  await db.delete(conversation).where(eq(conversation.id, conversationId));
+  return true;
+}

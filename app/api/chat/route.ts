@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, UIMessage, convertToModelMessages, createIdGenerator, validateUIMessages } from 'ai';
+import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { loadChat, saveChat, getConversation } from '@/lib/chat-store';
 
@@ -85,6 +86,9 @@ export async function POST(req: Request) {
         console.log('Last message content:', messages[messages.length - 1]?.parts);
         try {
           await saveChat({ chatId: conversationId, messages });
+          // Invalidate the cached sidebar data so the new message / title
+          // shows up immediately instead of only after a manual reload.
+          revalidatePath('/chat', 'layout');
           console.log('Messages saved successfully in onFinish');
         } catch (error) {
           console.error('Error saving messages in onFinish:', error);
