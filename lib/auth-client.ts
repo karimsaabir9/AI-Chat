@@ -1,8 +1,8 @@
 import { createAuthClient } from "better-auth/react";
 
-export const authClient = createAuthClient({
-  baseURL: "http://localhost:3000",
-});
+// No baseURL: defaults to the current origin, so this works both in local
+// dev and in production without hardcoding a host.
+export const authClient = createAuthClient({});
 
 export const { useSession, signIn, signOut, signUp } = authClient;
 
