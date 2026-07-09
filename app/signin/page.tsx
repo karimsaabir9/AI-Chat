@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { login } from "@/server/user";
 import { Suspense, useState } from "react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import { Mail, Lock, Loader2, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
@@ -35,6 +35,7 @@ const LoginPage = () => {
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const router = useRouter();
   const searchParams = useSearchParams();
   // Guests coming from the guest chat are sent back to /chat so their
   // in-progress conversation can be imported; everyone else goes to the
@@ -49,13 +50,11 @@ const LoginPage = () => {
     login(data.email, data.password)
       .then(() => {
         setSuccess("Login successful");
-        redirect(destination);
+        router.push(destination);
       })
       .catch((error) => {
         setError(error.message);
         setSuccess("");
-      })
-      .finally(() => {
         setIsSubmitting(false);
       });
   };
