@@ -24,7 +24,7 @@
 .DS_Store
 *.pem
 
-# claude code / editor local state
+# editor / local tooling state
 .claude/
 .vscode/
 .idea/
@@ -45,5 +45,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude code notes
+# local dev notes
 CLAUDE.md

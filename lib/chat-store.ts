@@ -103,7 +103,7 @@ export async function saveChat({ chatId, messages }: { chatId: string; messages:
     console.log('No new messages to insert');
   }
 
-  // Auto-generate a ChatGPT-style title from the first user message
+  // Auto-generate a short conversation title from the first user message
   let generatedTitle: string | undefined;
   if (conv[0].title === DEFAULT_CONVERSATION_TITLE) {
     const firstUserMessage = newMessages.find((msg) => msg.role === 'user');

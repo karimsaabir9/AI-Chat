@@ -3,7 +3,7 @@ import { generateText } from "ai";
 
 const DEFAULT_CONVERSATION_TITLE = "New Conversation";
 
-// Generate a short ChatGPT-style title from the first user message
+// Generate a short title from the first user message
 export async function generateConversationTitle(firstMessage: string): Promise<string> {
   const fallback = firstMessage.trim().slice(0, 50) || DEFAULT_CONVERSATION_TITLE;
 

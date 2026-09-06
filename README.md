@@ -5,7 +5,7 @@ A Next.js AI chat application built with the [Vercel AI SDK](https://ai-sdk.dev)
 ## Features
 
 - **Streaming chat** with OpenAI (`gpt-4o`), persisted per conversation
-- **Guest mode** — chat immediately without an account, similar to ChatGPT; sign in later and your conversation carries over
+- **Guest mode** — chat immediately without an account; sign in later and your conversation carries over
 - **Image generation** (`gpt-image-1`) from inside any chat, with one-click download
 - **Auto-generated conversation titles** from the first message, shown in a collapsible sidebar (mobile-friendly drawer)
 - **Authentication** via email/password and Google OAuth (better-auth), with route protection enforced in middleware
@@ -79,4 +79,3 @@ middleware.ts     Route protection (dashboard/chat auth checks)
 | `npm run build` | Build for production     |
 | `npm run start` | Run the production build |
 | `npm run lint`  | Lint the codebase        |
-# AI-Chat
